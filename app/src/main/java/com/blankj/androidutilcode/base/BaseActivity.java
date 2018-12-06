@@ -1,5 +1,7 @@
 package com.blankj.androidutilcode.base;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
@@ -11,22 +13,19 @@ import android.view.View;
  *     author: Blankj
  *     blog  : http://blankj.com
  *     time  : 2016/10/24
- *     desc  : Activity基类
+ *     desc  : base about activity
  * </pre>
  */
 public abstract class BaseActivity extends AppCompatActivity
         implements IBaseView {
 
-    /**
-     * 当前Activity渲染的视图View
-     */
-    protected View contentView;
+    protected View     mContentView;
+    protected Activity mActivity;
+
     /**
      * 上次点击时间
      */
     private long lastClick = 0;
-
-    protected BaseActivity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +34,14 @@ public abstract class BaseActivity extends AppCompatActivity
         Bundle bundle = getIntent().getExtras();
         initData(bundle);
         setBaseView(bindLayout());
-        initView(savedInstanceState, contentView);
+        initView(savedInstanceState, mContentView);
         doBusiness();
     }
 
+    @SuppressLint("ResourceType")
     protected void setBaseView(@LayoutRes int layoutId) {
-        setContentView(contentView = LayoutInflater.from(this).inflate(layoutId, null));
+        if (layoutId <= 0) return;
+        setContentView(mContentView = LayoutInflater.from(this).inflate(layoutId, null));
     }
 
     /**
